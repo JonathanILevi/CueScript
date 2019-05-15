@@ -1,0 +1,23 @@
+print,"Ready to go..."
+printPrefix,"Press enter to continue"
+
+: print
+  /home/jonathan/Downloads/doorbell-sound-effect-youtubemp3free.org.wav
+  print,input("> ")
+
+: /home/jonathan/Downloads/doorbell-sound-effect-youtubemp3free.org.wav
+  print,"Ready for music!"
+
+: /home/jonathan/Downloads/amclassical_beethoven_fur_elise.wav
+
+: print,"This is the last sound."
+  /home/jonathan/Downloads/doorbell-sound-effect-youtubemp3free.org.wav
+
+:
+
+
+
+
+
+
+

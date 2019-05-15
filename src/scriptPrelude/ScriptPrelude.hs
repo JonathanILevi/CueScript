@@ -17,6 +17,9 @@ cleanUp = VLCBackend.cleanUp
 scriptPrelude = fromList	[ (":", Script.Function $ wait)
 	, ("wait", Script.Function $ wait)
 	, ("play", Script.Function $ play)
+	, ("print", Script.Function $ print)
+	, ("printPrefix", Script.Function $ printPrefix)
+	, ("input", Script.Function $ input)
 	]
 
 
