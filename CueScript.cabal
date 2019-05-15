@@ -1,0 +1,72 @@
+cabal-version: 2.0
+
+-- This file has been generated from package.yaml by hpack version 0.31.2.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 426dcf74905c722085576d497b841a42afe44db5cd46137e8803b6d483c6f672
+
+name:           CueScript
+version:        0.1.0
+maintainer:     Jonathan Levi <JonathanILevi@gmail.com>
+license:        MIT
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    src/vlcBackend/CBackend.c
+
+library script
+  exposed-modules:
+      Script
+  other-modules:
+      Paths_CueScript
+  hs-source-dirs:
+      src/script
+  ghc-options: src/vlcBackend/CBackend.c -lvlc -w -Woverlapping-patterns -Wwarnings-deprecations -Wdeprecations -Wdeprecated-flags -Wunrecognised-pragmas -Wredundant-constraints -Wduplicate-exports -Woverflowed-literals -Wempty-enumerations -Wmissing-fields -Wmissing-methods -Wwrong-do-bind -Wunsupported-calling-conventions -Wdodgy-foreign-imports -Winline-rule-shadowing -Wunsupported-llvm-version -Wunrecognised-warning-flags -Winaccessible-code -Wstar-is-type -Wstar-binder
+  build-depends:
+      base >=4.12 && <5
+    , containers
+  default-language: Haskell2010
+
+library scriptPrelude
+  exposed-modules:
+      ScriptPrelude
+  other-modules:
+      ScriptFunctions
+      Paths_CueScript
+  hs-source-dirs:
+      src/scriptPrelude
+  ghc-options: src/vlcBackend/CBackend.c -lvlc -w -Woverlapping-patterns -Wwarnings-deprecations -Wdeprecations -Wdeprecated-flags -Wunrecognised-pragmas -Wredundant-constraints -Wduplicate-exports -Woverflowed-literals -Wempty-enumerations -Wmissing-fields -Wmissing-methods -Wwrong-do-bind -Wunsupported-calling-conventions -Wdodgy-foreign-imports -Winline-rule-shadowing -Wunsupported-llvm-version -Wunrecognised-warning-flags -Winaccessible-code -Wstar-is-type -Wstar-binder
+  build-depends:
+      base >=4.12 && <5
+    , containers
+    , script
+    , vlcBackend
+  default-language: Haskell2010
+
+library vlcBackend
+  exposed-modules:
+      VLCBackend
+  other-modules:
+      Paths_CueScript
+  hs-source-dirs:
+      src/vlcBackend
+  ghc-options: src/vlcBackend/CBackend.c -lvlc -w -Woverlapping-patterns -Wwarnings-deprecations -Wdeprecations -Wdeprecated-flags -Wunrecognised-pragmas -Wredundant-constraints -Wduplicate-exports -Woverflowed-literals -Wempty-enumerations -Wmissing-fields -Wmissing-methods -Wwrong-do-bind -Wunsupported-calling-conventions -Wdodgy-foreign-imports -Winline-rule-shadowing -Wunsupported-llvm-version -Wunrecognised-warning-flags -Winaccessible-code -Wstar-is-type -Wstar-binder
+  build-depends:
+      base >=4.12 && <5
+  default-language: Haskell2010
+
+executable CueScript
+  main-is: Main.hs
+  other-modules:
+      MakeScript
+      Paths_CueScript
+  hs-source-dirs:
+      src/main
+  ghc-options: src/vlcBackend/CBackend.c -lvlc -w -Woverlapping-patterns -Wwarnings-deprecations -Wdeprecations -Wdeprecated-flags -Wunrecognised-pragmas -Wredundant-constraints -Wduplicate-exports -Woverflowed-literals -Wempty-enumerations -Wmissing-fields -Wmissing-methods -Wwrong-do-bind -Wunsupported-calling-conventions -Wdodgy-foreign-imports -Winline-rule-shadowing -Wunsupported-llvm-version -Wunrecognised-warning-flags -Winaccessible-code -Wstar-is-type -Wstar-binder
+  build-depends:
+      base >=4.12 && <5
+    , containers
+    , script
+    , scriptPrelude
+  default-language: Haskell2010

@@ -1,0 +1,49 @@
+name: CueScript
+version: 0.1.0
+synopsis: ""
+description: ""
+maintainer: Jonathan Levi <JonathanILevi@gmail.com>
+category: ""
+extra-source-files: ["src/vlcBackend/CBackend.c"]
+##  - CHANGELOG.md
+
+# To remove tab warning
+ghc-options: "src/vlcBackend/CBackend.c -lvlc -w -Woverlapping-patterns -Wwarnings-deprecations -Wdeprecations -Wdeprecated-flags -Wunrecognised-pragmas -Wredundant-constraints -Wduplicate-exports -Woverflowed-literals -Wempty-enumerations -Wmissing-fields -Wmissing-methods -Wwrong-do-bind -Wunsupported-calling-conventions -Wdodgy-foreign-imports -Winline-rule-shadowing -Wunsupported-llvm-version -Wunrecognised-warning-flags -Winaccessible-code -Wstar-is-type -Wstar-binder"
+
+dependencies:
+  - base >=4.12 && <5
+
+internal-libraries:
+  script:
+    source-dirs: src/script
+    exposed-modules:
+      - Script
+    dependencies:
+      - containers
+  scriptPrelude:
+    source-dirs: src/scriptPrelude
+    exposed-modules:
+      - ScriptPrelude
+    dependencies:
+      - script
+      - containers
+      - vlcBackend
+  vlcBackend:
+    source-dirs: src/vlcBackend
+    exposed-modules:
+      - VLCBackend
+##  parse:
+##    source-dirs: src/parse
+##    dependencies:
+##      - parsec
+    
+
+executable:
+  main: Main.hs
+  source-dirs: src/main
+  dependencies:
+    - script
+    - scriptPrelude
+    - containers
+
+
