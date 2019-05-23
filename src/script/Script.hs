@@ -1,10 +1,10 @@
-module Script (Script(..),Expression(..),Value(..),ScopeVars, evaluate, eval) where
+module Script (Script(..),Expression(..),Value(..),Function(..),ScopeVars, eval,run) where
 
 import qualified Prelude as P
 import Prelude (($),(=<<),IO(..), Functor(..), Applicative(..), Monad(..), Traversable(..))
 import qualified Data.Map.Strict as M
-
-type Script = [Expression]
+import qualified Data.Foldable as B
+import qualified System.Directory as D
 
 data Expression	= Call P.String [Expression]
 	| Literal Value
@@ -13,31 +13,54 @@ data Expression	= Call P.String [Expression]
 data Value	= Undefined	
 	| Number	P.Double
 	| String	P.String
-	| Function	([Value] -> IO Value)
+	| Function	Function
 	| List	[Value]
 	| Map	(M.Map P.String Value)
 
+data Function	= ForeignFunction ([Value] -> IO Value)
+	| NativeFunction [P.String] [Expression]
+
+type Script = Function
 type ScopeVars = M.Map P.String Value
 
 instance P.Show Value where
 	show Undefined	= "[Undefined]"
 	show (Number v)	= P.show v
 	show (String v)	= v
-	show (Function _)	= "[function]"
+	show (Function v)	= P.show v
 	show (List v)	= P.show v
 	show (Map v)	= P.show v
+instance P.Show Function where
+	show (ForeignFunction _) = "[ForeignFunction]"
+	show (NativeFunction _ _) = "[Function]"
 
-
-
-evaluate :: ScopeVars -> [Expression] -> IO [Value]
-evaluate valueMap ss = sequence $ fmap (eval valueMap) ss
 
 eval :: ScopeVars -> Expression -> IO Value
-eval valueMap (Call f args) = call valueMap f =<< evaluate valueMap args
-eval valueMap (Literal v) = return v
+eval scopeVars (Call f args) = do
+	f' <- lookup scopeVars f
+	args' <- evalSequence scopeVars args
+	call scopeVars f' args'
+eval scopeVars (Literal v) = return v
 
-call :: ScopeVars -> P.String -> [Value] -> IO Value
-call valueMap fn args = do
-	----P.print (fn P.++ " called with: " P.++ P.show args)
-	case (valueMap M.! fn) of
-		Function f -> f args
+run :: ScopeVars -> Function -> [Value] -> IO Value
+run scopeVars (ForeignFunction f) args = do
+	f args
+run scopeVars (NativeFunction a f) args = do
+	evalSequence scopeVars f
+	return Undefined
+
+evalSequence :: ScopeVars -> [Expression] -> IO [Value]
+evalSequence scopeVars ss = sequence $ fmap (eval scopeVars) ss
+
+call :: ScopeVars -> Value -> [Value] -> IO Value
+call scopeVars (Function f) args = do
+	run scopeVars f args
+call scopeVars value [] = do
+	return value
+
+lookup :: ScopeVars -> P.String -> IO Value
+lookup scopeVars name = do
+	return (scopeVars M.! name)
+
+
+

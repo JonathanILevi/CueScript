@@ -14,12 +14,12 @@ setup = VLCBackend.setup
 cleanUp :: IO ()
 cleanUp = VLCBackend.cleanUp
 
-scriptPrelude = fromList	[ (":", Script.Function $ wait)
-	, ("wait", Script.Function $ wait)
-	, ("play", Script.Function $ play)
-	, ("print", Script.Function $ print)
-	, ("printPrefix", Script.Function $ printPrefix)
-	, ("input", Script.Function $ input)
+scriptPrelude = fromList	[ (":"	, Script.Function $ Script.ForeignFunction $ wait	)
+	, ("wait"	, Script.Function $ Script.ForeignFunction $ wait	)
+	, ("play"	, Script.Function $ Script.ForeignFunction $ play	)
+	, ("print"	, Script.Function $ Script.ForeignFunction $ print	)
+	, ("printPrefix"	, Script.Function $ Script.ForeignFunction $ printPrefix	)
+	, ("input"	, Script.Function $ Script.ForeignFunction $ input	)
 	]
 
 

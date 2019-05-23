@@ -4,7 +4,8 @@ import Prelude (($))
 
 import Script
 
-script =	[ Call "print" [Literal $ String "Ready to go..."]
+script =	NativeFunction [] $
+	[ Call "print" [Literal $ String "Ready to go..."]
 	, Call "printPrefix" [Literal $ String "Press enter to continue"]
 	, Call ":" []
 	, Call "print" []

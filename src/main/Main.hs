@@ -1,6 +1,6 @@
 module Main where
 
-import Script (Script,evaluate)
+import Script (Script,run)
 import qualified Script
 import MakeScript (script)
 import ScriptPrelude
@@ -9,7 +9,7 @@ import Data.Map
 main = do
 	ScriptPrelude.setup
 	print script
-	evaluate scriptPrelude script
+	run scriptPrelude script []
 	ScriptPrelude.cleanUp
 
 
