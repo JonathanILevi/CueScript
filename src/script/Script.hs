@@ -1,11 +1,11 @@
-module Script (Script(..),Statement(..),Value(..),ValueMap, evaluate, eval) where
+module Script (Script(..),Expression(..),Value(..),ValueMap, evaluate, eval) where
 
 import qualified Prelude as P
 import Prelude (($),(=<<),IO(..), Functor(..), Applicative(..), Monad(..), Traversable(..))
 import qualified Data.Map as M
 
-type Script = [Statement]
-data Statement = Call P.String [Statement] | Value Value
+type Script = [Expression]
+data Expression = Call P.String [Expression] | Value Value
 	deriving (P.Show)
 data Value = String P.String | Function ([Value] -> IO Value) | Undefined
 type ValueMap = M.Map P.String Value
@@ -17,10 +17,10 @@ instance P.Show Value where
 
 
 
-evaluate :: ValueMap -> [Statement] -> IO [Value]
+evaluate :: ValueMap -> [Expression] -> IO [Value]
 evaluate valueMap ss = sequence $ fmap (eval valueMap) ss
 
-eval :: ValueMap -> Statement -> IO Value
+eval :: ValueMap -> Expression -> IO Value
 eval valueMap (Call f args) = call valueMap f =<< evaluate valueMap args
 eval valueMap (Value v) = return v
 
