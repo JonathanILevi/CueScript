@@ -6,7 +6,8 @@ import qualified Data.Map.Strict as M
 
 type Script = [Expression]
 
-data Expression = Call P.String [Expression] | Value Value
+data Expression	= Call P.String [Expression]
+	| Literal Value
 	deriving (P.Show)
 
 data Value	= Undefined	
@@ -33,7 +34,7 @@ evaluate valueMap ss = sequence $ fmap (eval valueMap) ss
 
 eval :: ValueMap -> Expression -> IO Value
 eval valueMap (Call f args) = call valueMap f =<< evaluate valueMap args
-eval valueMap (Value v) = return v
+eval valueMap (Literal v) = return v
 
 call :: ValueMap -> P.String -> [Value] -> IO Value
 call valueMap fn args = do
