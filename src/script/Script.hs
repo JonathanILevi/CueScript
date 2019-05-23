@@ -2,7 +2,7 @@ module Script (Script(..),Expression(..),Value(..),ValueMap, evaluate, eval) whe
 
 import qualified Prelude as P
 import Prelude (($),(=<<),IO(..), Functor(..), Applicative(..), Monad(..), Traversable(..))
-import qualified Data.Map as M
+import qualified Data.Map.Strict as M
 
 type Script = [Expression]
 
