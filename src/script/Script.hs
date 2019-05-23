@@ -1,4 +1,4 @@
-module Script (Script(..),Expression(..),Value(..),ValueMap, evaluate, eval) where
+module Script (Script(..),Expression(..),Value(..),ScopeVars, evaluate, eval) where
 
 import qualified Prelude as P
 import Prelude (($),(=<<),IO(..), Functor(..), Applicative(..), Monad(..), Traversable(..))
@@ -17,7 +17,7 @@ data Value	= Undefined
 	| List	[Value]
 	| Map	(M.Map P.String Value)
 
-type ValueMap = M.Map P.String Value
+type ScopeVars = M.Map P.String Value
 
 instance P.Show Value where
 	show Undefined	= "[Undefined]"
@@ -29,14 +29,14 @@ instance P.Show Value where
 
 
 
-evaluate :: ValueMap -> [Expression] -> IO [Value]
+evaluate :: ScopeVars -> [Expression] -> IO [Value]
 evaluate valueMap ss = sequence $ fmap (eval valueMap) ss
 
-eval :: ValueMap -> Expression -> IO Value
+eval :: ScopeVars -> Expression -> IO Value
 eval valueMap (Call f args) = call valueMap f =<< evaluate valueMap args
 eval valueMap (Literal v) = return v
 
-call :: ValueMap -> P.String -> [Value] -> IO Value
+call :: ScopeVars -> P.String -> [Value] -> IO Value
 call valueMap fn args = do
 	----P.print (fn P.++ " called with: " P.++ P.show args)
 	case (valueMap M.! fn) of
