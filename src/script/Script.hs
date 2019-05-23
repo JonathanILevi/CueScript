@@ -5,15 +5,26 @@ import Prelude (($),(=<<),IO(..), Functor(..), Applicative(..), Monad(..), Trave
 import qualified Data.Map as M
 
 type Script = [Expression]
+
 data Expression = Call P.String [Expression] | Value Value
 	deriving (P.Show)
-data Value = String P.String | Function ([Value] -> IO Value) | Undefined
+
+data Value	= Undefined	
+	| Number	P.Double
+	| String	P.String
+	| Function	([Value] -> IO Value)
+	| List	[Value]
+	| Map	(M.Map P.String Value)
+
 type ValueMap = M.Map P.String Value
 
 instance P.Show Value where
-	show (String s) = s
-	show (Function f) = "[function]"
-	show Undefined = "[Undefined]"
+	show Undefined	= "[Undefined]"
+	show (Number v)	= P.show v
+	show (String v)	= v
+	show (Function _)	= "[function]"
+	show (List v)	= P.show v
+	show (Map v)	= P.show v
 
 
 
