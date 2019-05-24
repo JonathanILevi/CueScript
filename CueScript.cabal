@@ -4,7 +4,7 @@ cabal-version: 2.0
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 426dcf74905c722085576d497b841a42afe44db5cd46137e8803b6d483c6f672
+-- hash: 487b22f9bc25d4f16bc853feca945d739de85cc3998fb6fbfac578fa71b3f211
 
 name:           CueScript
 version:        0.1.0
@@ -22,7 +22,7 @@ library script
       Paths_CueScript
   hs-source-dirs:
       src/script
-  ghc-options: src/vlcBackend/CBackend.c -lvlc -w -Woverlapping-patterns -Wwarnings-deprecations -Wdeprecations -Wdeprecated-flags -Wunrecognised-pragmas -Wredundant-constraints -Wduplicate-exports -Woverflowed-literals -Wempty-enumerations -Wmissing-fields -Wmissing-methods -Wwrong-do-bind -Wunsupported-calling-conventions -Wdodgy-foreign-imports -Winline-rule-shadowing -Wunsupported-llvm-version -Wunrecognised-warning-flags -Winaccessible-code -Wstar-is-type -Wstar-binder
+  ghc-options: -lvlc -w -Woverlapping-patterns -Wwarnings-deprecations -Wdeprecations -Wdeprecated-flags -Wunrecognised-pragmas -Wredundant-constraints -Wduplicate-exports -Woverflowed-literals -Wempty-enumerations -Wmissing-fields -Wmissing-methods -Wwrong-do-bind -Wunsupported-calling-conventions -Wdodgy-foreign-imports -Winline-rule-shadowing -Wunsupported-llvm-version -Wunrecognised-warning-flags -Winaccessible-code -Wstar-is-type -Wstar-binder
   build-depends:
       base >=4.12 && <5
     , containers
@@ -36,7 +36,7 @@ library scriptPrelude
       Paths_CueScript
   hs-source-dirs:
       src/scriptPrelude
-  ghc-options: src/vlcBackend/CBackend.c -lvlc -w -Woverlapping-patterns -Wwarnings-deprecations -Wdeprecations -Wdeprecated-flags -Wunrecognised-pragmas -Wredundant-constraints -Wduplicate-exports -Woverflowed-literals -Wempty-enumerations -Wmissing-fields -Wmissing-methods -Wwrong-do-bind -Wunsupported-calling-conventions -Wdodgy-foreign-imports -Winline-rule-shadowing -Wunsupported-llvm-version -Wunrecognised-warning-flags -Winaccessible-code -Wstar-is-type -Wstar-binder
+  ghc-options: -lvlc -w -Woverlapping-patterns -Wwarnings-deprecations -Wdeprecations -Wdeprecated-flags -Wunrecognised-pragmas -Wredundant-constraints -Wduplicate-exports -Woverflowed-literals -Wempty-enumerations -Wmissing-fields -Wmissing-methods -Wwrong-do-bind -Wunsupported-calling-conventions -Wdodgy-foreign-imports -Winline-rule-shadowing -Wunsupported-llvm-version -Wunrecognised-warning-flags -Winaccessible-code -Wstar-is-type -Wstar-binder
   build-depends:
       base >=4.12 && <5
     , containers
@@ -51,7 +51,7 @@ library vlcBackend
       Paths_CueScript
   hs-source-dirs:
       src/vlcBackend
-  ghc-options: src/vlcBackend/CBackend.c -lvlc -w -Woverlapping-patterns -Wwarnings-deprecations -Wdeprecations -Wdeprecated-flags -Wunrecognised-pragmas -Wredundant-constraints -Wduplicate-exports -Woverflowed-literals -Wempty-enumerations -Wmissing-fields -Wmissing-methods -Wwrong-do-bind -Wunsupported-calling-conventions -Wdodgy-foreign-imports -Winline-rule-shadowing -Wunsupported-llvm-version -Wunrecognised-warning-flags -Winaccessible-code -Wstar-is-type -Wstar-binder
+  ghc-options: -lvlc -w -Woverlapping-patterns -Wwarnings-deprecations -Wdeprecations -Wdeprecated-flags -Wunrecognised-pragmas -Wredundant-constraints -Wduplicate-exports -Woverflowed-literals -Wempty-enumerations -Wmissing-fields -Wmissing-methods -Wwrong-do-bind -Wunsupported-calling-conventions -Wdodgy-foreign-imports -Winline-rule-shadowing -Wunsupported-llvm-version -Wunrecognised-warning-flags -Winaccessible-code -Wstar-is-type -Wstar-binder
   build-depends:
       base >=4.12 && <5
   default-language: Haskell2010
@@ -63,7 +63,7 @@ executable CueScript
       Paths_CueScript
   hs-source-dirs:
       src/main
-  ghc-options: src/vlcBackend/CBackend.c -lvlc -w -Woverlapping-patterns -Wwarnings-deprecations -Wdeprecations -Wdeprecated-flags -Wunrecognised-pragmas -Wredundant-constraints -Wduplicate-exports -Woverflowed-literals -Wempty-enumerations -Wmissing-fields -Wmissing-methods -Wwrong-do-bind -Wunsupported-calling-conventions -Wdodgy-foreign-imports -Winline-rule-shadowing -Wunsupported-llvm-version -Wunrecognised-warning-flags -Winaccessible-code -Wstar-is-type -Wstar-binder
+  ghc-options: -lvlc -w -Woverlapping-patterns -Wwarnings-deprecations -Wdeprecations -Wdeprecated-flags -Wunrecognised-pragmas -Wredundant-constraints -Wduplicate-exports -Woverflowed-literals -Wempty-enumerations -Wmissing-fields -Wmissing-methods -Wwrong-do-bind -Wunsupported-calling-conventions -Wdodgy-foreign-imports -Winline-rule-shadowing -Wunsupported-llvm-version -Wunrecognised-warning-flags -Winaccessible-code -Wstar-is-type -Wstar-binder
   build-depends:
       base >=4.12 && <5
     , containers

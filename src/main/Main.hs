@@ -7,10 +7,8 @@ import ScriptPrelude
 import Data.Map
 
 main = do
-	ScriptPrelude.setup
+	scriptPrelude <- createScriptPrelude
 	print script
 	run scriptPrelude script []
-	ScriptPrelude.cleanUp
-
 
 

@@ -4,7 +4,7 @@ import qualified Prelude as P
 import Prelude (($),(=<<),IO(..), Functor(..), Applicative(..), Monad(..), Traversable(..))
 import qualified Data.Map.Strict as M
 import qualified Data.Foldable as B
-import qualified System.Directory as D
+----import qualified System.Directory as D
 
 data Expression	= Call P.String [Expression]
 	| Literal Value
@@ -61,6 +61,11 @@ call scopeVars value [] = do
 lookup :: ScopeVars -> P.String -> IO Value
 lookup scopeVars name = do
 	return (scopeVars M.! name)
+----
+----lookupFile name = do
+----	filter () <$> D.listDirectory nameAsPath
+----	where	namePath = 
+----		nameFile = 
 
 
 

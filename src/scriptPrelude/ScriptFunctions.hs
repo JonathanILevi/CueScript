@@ -8,6 +8,7 @@ import Script
 
 import VLCBackend
 
+
 wait _ = do
 	P.putStr ":"
 	B.hFlush B.stdout
@@ -20,9 +21,9 @@ wait _ = do
 	B.hFlush B.stdout
 	
 	return Undefined
-play (String file:_) = do
+play inst (String file:_) = do
 	P.putStrLn ("Playing " P.++ file)
-	VLCBackend.play (file)
+	VLCBackend.playFromPath inst file
 	return Undefined
 print (logs) = do
 	P.putStrLn $ P.concatMap P.show logs
