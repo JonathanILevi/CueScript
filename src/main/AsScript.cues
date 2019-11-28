@@ -1,9 +1,16 @@
 print,"Ready to go..."
 printPrefix,"Press enter to continue"
 
+x,y={
+	pre<-input(">")
+	printPrefix pre
+	print y
+}
+
 : print
   /home/jonathan/Downloads/doorbell-sound-effect-youtubemp3free.org.wav
-  print,input("> ")
+  inp<-input("> ")
+  print,inp
 
 : /home/jonathan/Downloads/doorbell-sound-effect-youtubemp3free.org.wav
   print,"Ready for music!"

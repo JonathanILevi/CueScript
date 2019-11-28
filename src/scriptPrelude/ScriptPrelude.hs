@@ -22,5 +22,5 @@ createScriptPrelude = do
 
 
 makeForeignProcedure :: (Script.Value -> IO Script.Value) -> Script.Value
-makeForeignProcedure p = Script.Function $ Script.NativeFunction "arg" $ Script.Literal $ Procedure $ NativeProcedure empty $ (:[]) $ Run $ Literal $ Procedure $ ForeignProcedure "arg" p
+makeForeignProcedure p = Script.Function $ Script.ForeignFunction (\value->Script.Procedure $ ForeignProcedure $ p value)
 

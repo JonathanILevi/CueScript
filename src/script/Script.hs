@@ -1,7 +1,7 @@
 module Script where
 
 import qualified Prelude as P
-import Prelude (($),(=<<),(<$>),(<*>),IO(..), Functor(..), Applicative(..), Monad(..), Traversable(..))
+import Prelude (($),(=<<),(<$>),(<*>),(++),IO(..), Functor(..), Applicative(..), Monad(..), Traversable(..))
 import qualified Data.Map.Strict as M
 import qualified Data.Foldable as B
 import qualified Data.List as B
@@ -12,7 +12,7 @@ type Block = [Statement]
 data Statement	= Run Expression
 	| Assign P.String Statement
 data Expression	= Call Expression Expression
-	| Literal Value
+	| Literal Literal
 	| Ref P.String
 	deriving (P.Show)
 
@@ -28,8 +28,18 @@ data Function	= ForeignFunction (Value -> Value)
 ----	| ForeignOperator (Value -> Value -> Value)
 	| NativeFunction P.String Expression
 ----	| NativeOperator P.String P.String Expression
-data Procedure	= ForeignProcedure P.String{-String is name of arg-} (Value -> IO Value)
+data Procedure	= ForeignProcedure (IO Value)
 	| NativeProcedure Memory Block
+
+
+data Literal	= LitUndefined
+	| LitNumber	P.Double
+	| LitString	P.String
+	| LitFunction	P.String Expression
+	| LitProcedure	Block
+	| LitList	[Value]
+	| LitMap	(M.Map P.String Value)
+	
 
 data State =	State
 	Memory
@@ -49,11 +59,19 @@ instance P.Show Function where
 	show (NativeFunction _ _) = "[Function]"
 ----	show (NativeOperator _) = "[Operator]"
 instance P.Show Procedure where
-	show (ForeignProcedure _ _) = "[ForeignProcedure]"
+	show (ForeignProcedure _) = "[ForeignProcedure]"
 	show (NativeProcedure _ _) = "[Procedure]"
+instance P.Show Literal where
+	show LitUndefined	= "[Literal]" ++ "[Undefined]"
+	show (LitNumber v)	= "[Literal]" ++ P.show v
+	show (LitString v)	= "[Literal]" ++ v
+	show (LitFunction _ _)	= "[Literal]" ++ "[Function]"
+	show (LitProcedure _)	= "[Literal]" ++ "[Procedure]"
+	show (LitList v)	= "[Literal]" ++ P.show v
+	show (LitMap v)	= "[Literal]" ++ P.show v
 
 run :: State -> Procedure -> IO Value
-run state (ForeignProcedure argName p) = p (lookup state argName)
+run state (ForeignProcedure p) = p
 run state (NativeProcedure memory block) = P.snd <$> B.foldlM (\(ns, rd) smt->enact ns smt) (State memory, Undefined) block
 
 tryRun :: State -> Value -> IO Value
@@ -75,9 +93,17 @@ enact state (Assign n s) = do
 
 eval :: State -> Expression -> Value
 eval state (Call fe ae) = tryCall state (eval state fe) (eval state ae)
-eval (State memory) (Literal (Procedure (NativeProcedure _ p))) = Procedure (NativeProcedure memory p)
-eval state (Literal v) = v
+eval state (Literal l) = makeLiteral state l
 eval state (Ref name) = lookup state name
+
+makeLiteral :: State -> Literal -> Value
+makeLiteral state (LitUndefined) = Undefined
+makeLiteral state (LitNumber v) = Number v
+makeLiteral state (LitString v) = String v
+makeLiteral state (LitFunction arg body) = Function $ NativeFunction arg body
+makeLiteral (State memory) (LitProcedure p) = Procedure (NativeProcedure memory p)
+makeLiteral state (LitList vs) = List vs
+makeLiteral state (LitMap v) = Map v
 
 
 lookup :: State -> P.String -> Value
