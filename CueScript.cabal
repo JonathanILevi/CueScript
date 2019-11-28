@@ -1,10 +1,10 @@
 cabal-version: 2.0
 
--- This file has been generated from package.yaml by hpack version 0.31.2.
+-- This file has been generated from package.yaml by hpack version 0.33.0.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 487b22f9bc25d4f16bc853feca945d739de85cc3998fb6fbfac578fa71b3f211
+-- hash: fa044bebbc2a8e4439167851347e43a583d43ca7a6151a9c03b933e1bfdc3367
 
 name:           CueScript
 version:        0.1.0
@@ -12,8 +12,6 @@ maintainer:     Jonathan Levi <JonathanILevi@gmail.com>
 license:        MIT
 license-file:   LICENSE
 build-type:     Simple
-extra-source-files:
-    src/vlcBackend/CBackend.c
 
 library script
   exposed-modules:

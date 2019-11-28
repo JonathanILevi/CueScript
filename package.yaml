@@ -4,7 +4,7 @@ synopsis: ""
 description: ""
 maintainer: Jonathan Levi <JonathanILevi@gmail.com>
 category: ""
-extra-source-files: ["src/vlcBackend/CBackend.c"]
+####extra-source-files: ["src/vlcBackend/CBackend.c"]
 ##  - CHANGELOG.md
 
 # To remove tab warning
@@ -32,6 +32,8 @@ internal-libraries:
     source-dirs: src/vlcBackend
     exposed-modules:
       - VLCBackend
+    extra-libraries:
+      - vlc
 ##  parse:
 ##    source-dirs: src/parse
 ##    dependencies:

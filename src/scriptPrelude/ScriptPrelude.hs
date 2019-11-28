@@ -9,14 +9,18 @@ import Data.Map
 
 import qualified VLCBackend
 
+createScriptPrelude :: IO Script.Memory
 createScriptPrelude = do
 	vlcInstance <- VLCBackend.newInstance
-	P.return $ fromList	[ (":"	, Script.Function $ Script.ForeignFunction $ wait	)
-		, ("wait"	, Script.Function $ Script.ForeignFunction $ wait	)
-		, ("play"	, Script.Function $ Script.ForeignFunction $ play vlcInstance	)
-		, ("print"	, Script.Function $ Script.ForeignFunction $ print	)
-		, ("printPrefix"	, Script.Function $ Script.ForeignFunction $ printPrefix	)
-		, ("input"	, Script.Function $ Script.ForeignFunction $ input	)
+	P.return $ fromList	[ (":"	, makeForeignProcedure $ wait	)
+		, ("wait"	, makeForeignProcedure $ wait	)
+		, ("play"	, makeForeignProcedure $ play vlcInstance	)
+		, ("print"	, makeForeignProcedure $ print	)
+		, ("printPrefix"	, makeForeignProcedure $ printPrefix	)
+		, ("input"	, makeForeignProcedure $ input	)
 		]
 
+
+makeForeignProcedure :: (Script.Value -> IO Script.Value) -> Script.Value
+makeForeignProcedure p = Script.Function $ Script.NativeFunction "arg" $ Script.Literal $ Procedure $ NativeProcedure empty $ (:[]) $ Run $ Literal $ Procedure $ ForeignProcedure "arg" p
 

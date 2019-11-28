@@ -4,22 +4,23 @@ import Prelude (($))
 
 import Script
 
-script =	NativeFunction [] $
-	[ Call "print" [Literal $ String "Ready to go..."]
-	, Call "printPrefix" [Literal $ String "Press enter to continue"]
-	, Call ":" []
-	, Call "print" []
-	, Call "play" [Literal $ String "doorbell-sound-effect-youtubemp3free.org.wav"]
-	, Call "print" [Call "input" [Literal $ String "> "]]
-	, Call ":" []
-	, Call "play" [Literal $ String "doorbell-sound-effect-youtubemp3free.org.wav"]
-	, Call "print" [Literal $ String "Ready for music!"]
-	, Call ":" []
-	, Call "play" [Literal $ String "amclassical_beethoven_fur_elise.wav"]
-	, Call ":" []
-	, Call "print" [Literal $ String "This is the last sound."]
-	, Call "play" [Literal $ String "doorbell-sound-effect-youtubemp3free.org.wav"]
-	, Call ":" []
+script memory =	NativeProcedure memory $
+	[ Run $ Call (Ref "print") (Literal $ String "Ready to go...")
+	, Run $ Call (Ref "printPrefix") (Literal $ String "Press enter to continue")
+	, Run $ Ref ":"
+	, Run $ Ref "print"
+	, Run $ Call (Ref "play") (Literal $ String "doorbell-sound-effect-youtubemp3free.org.wav")
+	, Assign "inp" $ Run $ Call (Ref "input") (Literal $ String "> ")
+	, Run $ Call (Ref "print") (Ref "inp")
+	, Run $ Ref ":"
+	, Run $ Call (Ref "play") (Literal $ String "doorbell-sound-effect-youtubemp3free.org.wav")
+	, Run $ Call (Ref "print") (Literal $ String "Ready for music!")
+	, Run $ Ref ":"
+	, Run $ Call (Ref "play") (Literal $ String "amclassical_beethoven_fur_elise.wav")
+	, Run $ Ref ":"
+	, Run $ Call (Ref "print") (Literal $ String "This is the last sound.")
+	, Run $ Call (Ref "play") (Literal $ String "doorbell-sound-effect-youtubemp3free.org.wav")
+	, Run $ Ref $ ":"
 	]
 
 
