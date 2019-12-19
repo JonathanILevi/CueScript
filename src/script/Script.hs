@@ -21,11 +21,12 @@ data Expression	= Call Expression Expression
 data Value	= Undefined	
 	| Number	P.Double
 	| String	P.String
-	| Function	(Value -> Value)
-	| Procedure	(IO Value)
 	| List	[Value]
 	| Map	(M.Map P.String Value)
-	| Pointer	IORef Value ----Unimplemented
+----	| Pointer	(IORef Value)
+	| Function	(Value -> Value)
+	| Action	(P.String, Value) --Always Foreign
+	| Procedure	Block
 
 
 data Literal	= LitUndefined
@@ -38,6 +39,8 @@ data Literal	= LitUndefined
 	
 
 type Stack = M.Map P.String Value
+
+data Breakpoint	= Breakpoint (P.Maybe ((P.String, Value), (Value -> Breakpoint)))
 
 instance P.Show Value where
 	show Undefined	= "[Undefined]"
@@ -56,6 +59,21 @@ instance P.Show Literal where
 	show (LitList v)	= "[Literal]" ++ P.show v
 	show (LitMap v)	= "[Literal]" ++ P.show v
 
+
+start :: Block -> R.Reader Stack Breakpoint
+start ([]) = return $ Breakpoint $ P.Nothing
+start ((Run e):ss) = do
+	stack <- R.ask
+	let ourNext = (\_->R.runReader (start ss) stack)
+	extendBreakpoint ourNext <$> (run =<< eval e)
+
+extendBreakpoint :: (Value -> Breakpoint) -> Breakpoint -> Breakpoint
+extendBreakpoint extention (Breakpoint (P.Just (this,next))) = Breakpoint $ P.Just (this, (\v->extendBreakpoint extention (next v)))
+extendBreakpoint extention (Breakpoint (P.Nothing)) = extention Undefined
+
+run :: Value -> R.Reader Stack Breakpoint
+run (Action action) = return $ Breakpoint $ P.Just (action, (\_->Breakpoint P.Nothing))
+run (Procedure block) = start block
 
 
 eval :: Expression -> R.Reader Stack Value
