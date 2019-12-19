@@ -3,24 +3,16 @@ import qualified Prelude as P
 import Prelude (($), IO)
 
 import Script
-import ScriptFunctions
+import ScriptFunctions as SF
 
 import Data.Map
 
 import qualified VLCBackend
 
-createScriptPrelude :: IO Script.Memory
+createScriptPrelude :: IO Script.Stack
 createScriptPrelude = do
 	vlcInstance <- VLCBackend.newInstance
-	P.return $ fromList	[ (":"	, makeForeignProcedure $ wait	)
-		, ("wait"	, makeForeignProcedure $ wait	)
-		, ("play"	, makeForeignProcedure $ play vlcInstance	)
-		, ("print"	, makeForeignProcedure $ print	)
-		, ("printPrefix"	, makeForeignProcedure $ printPrefix	)
-		, ("input"	, makeForeignProcedure $ input	)
+	P.return $ fromList	[ ("add"	, Function $ SF.add	)
 		]
 
-
-makeForeignProcedure :: (Script.Value -> IO Script.Value) -> Script.Value
-makeForeignProcedure p = Script.Function $ Script.ForeignFunction (\value->Script.Procedure $ ForeignProcedure $ p value)
 

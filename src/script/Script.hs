@@ -5,6 +5,8 @@ import Prelude (($),(=<<),(<$>),(<*>),(++),IO(..), Functor(..), Applicative(..),
 import qualified Data.Map.Strict as M
 import qualified Data.Foldable as B
 import qualified Data.List as B
+import qualified Control.Monad.State as S
+import qualified Control.Monad.Reader as R
 ----import qualified System.Directory as D
 
 type Block = [Statement]
@@ -19,17 +21,11 @@ data Expression	= Call Expression Expression
 data Value	= Undefined	
 	| Number	P.Double
 	| String	P.String
-	| Function	Function
-	| Procedure	Procedure
+	| Function	(Value -> Value)
+	| Procedure	(IO Value)
 	| List	[Value]
 	| Map	(M.Map P.String Value)
-
-data Function	= ForeignFunction (Value -> Value)
-----	| ForeignOperator (Value -> Value -> Value)
-	| NativeFunction P.String Expression
-----	| NativeOperator P.String P.String Expression
-data Procedure	= ForeignProcedure (IO Value)
-	| NativeProcedure Memory Block
+	| Pointer	IORef Value ----Unimplemented
 
 
 data Literal	= LitUndefined
@@ -41,26 +37,16 @@ data Literal	= LitUndefined
 	| LitMap	(M.Map P.String Value)
 	
 
-data State =	State
-	Memory
-type Memory = M.Map P.String Value
+type Stack = M.Map P.String Value
 
 instance P.Show Value where
 	show Undefined	= "[Undefined]"
 	show (Number v)	= P.show v
 	show (String v)	= v
-	show (Function v)	= P.show v
-	show (Procedure v)	= P.show v
+	show (Function v)	= "[Function]"
+	show (Procedure v)	= "[Procedure]"
 	show (List v)	= P.show v
 	show (Map v)	= P.show v
-instance P.Show Function where
-	show (ForeignFunction _) = "[ForeignFunction]"
-----	show (ForeignOperator _) = "[ForeignOperator]"
-	show (NativeFunction _ _) = "[Function]"
-----	show (NativeOperator _) = "[Operator]"
-instance P.Show Procedure where
-	show (ForeignProcedure _) = "[ForeignProcedure]"
-	show (NativeProcedure _ _) = "[Procedure]"
 instance P.Show Literal where
 	show LitUndefined	= "[Literal]" ++ "[Undefined]"
 	show (LitNumber v)	= "[Literal]" ++ P.show v
@@ -70,47 +56,31 @@ instance P.Show Literal where
 	show (LitList v)	= "[Literal]" ++ P.show v
 	show (LitMap v)	= "[Literal]" ++ P.show v
 
-run :: State -> Procedure -> IO Value
-run state (ForeignProcedure p) = p
-run state (NativeProcedure memory block) = P.snd <$> B.foldlM (\(ns, rd) smt->enact ns smt) (State memory, Undefined) block
-
-tryRun :: State -> Value -> IO Value
-tryRun state (Procedure p) = run state p
-tryRun state (Function f) = tryRun state $ call state f Undefined
-
-call :: State -> Function -> Value -> Value
-call state (ForeignFunction f) v = f v
-call state (NativeFunction argName expression) v = eval (set state argName v) expression
-
-tryCall :: State -> Value -> Value -> Value
-tryCall state (Function f) = call state f
-
-enact :: State -> Statement -> IO (State, Value)
-enact state (Run e) = (,) <$> pure state <*> (tryRun state $ eval state e)
-enact state (Assign n s) = do
-	(nstate,v) <- (enact state s)
-	return (set nstate n v, v)
-
-eval :: State -> Expression -> Value
-eval state (Call fe ae) = tryCall state (eval state fe) (eval state ae)
-eval state (Literal l) = makeLiteral state l
-eval state (Ref name) = lookup state name
-
-makeLiteral :: State -> Literal -> Value
-makeLiteral state (LitUndefined) = Undefined
-makeLiteral state (LitNumber v) = Number v
-makeLiteral state (LitString v) = String v
-makeLiteral state (LitFunction arg body) = Function $ NativeFunction arg body
-makeLiteral (State memory) (LitProcedure p) = Procedure (NativeProcedure memory p)
-makeLiteral state (LitList vs) = List vs
-makeLiteral state (LitMap v) = Map v
 
 
-lookup :: State -> P.String -> Value
-lookup (State memory) name = memory M.! name
+eval :: Expression -> R.Reader Stack Value
+eval (Call fe ae) = call <$> eval fe <*> eval ae
+	where	call :: Value -> Value -> Value
+		call (Function f) v = f v
+eval (Literal l) = makeLiteral l
+eval (Ref name) = lookup name
 
-set :: State -> P.String -> Value -> State
-set (State memory) n v = State $ M.insert n v memory
+makeLiteral :: Literal -> R.Reader Stack Value
+makeLiteral (LitUndefined) = return $ Undefined
+makeLiteral (LitNumber v) = return $ Number v
+makeLiteral (LitString v) = return $ String v
+makeLiteral (LitFunction argName body) = do
+	stack <- R.ask
+	return $ Function (\arg->R.runReader (eval body) (set argName arg stack))
+makeLiteral (LitList vs) = return $ List vs
+makeLiteral (LitMap v) = return $ Map v
+
+
+lookup :: P.String -> R.Reader Stack Value
+lookup name = (M.!) <$> R.ask <*> pure name
+
+set ::  P.String -> Value -> Stack -> Stack
+set n v stack = M.insert n v stack
 ----
 ----lookupFile name = do
 ----	filter () <$> D.listDirectory nameAsPath

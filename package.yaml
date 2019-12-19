@@ -20,6 +20,7 @@ internal-libraries:
       - Script
     dependencies:
       - containers
+      - mtl
   scriptPrelude:
     source-dirs: src/scriptPrelude
     exposed-modules:
@@ -47,5 +48,6 @@ executable:
     - script
     - scriptPrelude
     - containers
+    - mtl
 
 

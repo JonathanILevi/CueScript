@@ -8,6 +8,9 @@ import Script
 
 import VLCBackend
 
+add :: Value -> Value
+add (List vs) = Number $ P.foldl1 (P.+) $ fmap (\(Number v)->v) $ vs
+
 wait :: Value -> P.IO Value
 wait _ = do
 	P.putStr ":"
