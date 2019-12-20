@@ -8,7 +8,7 @@ category: ""
 ##  - CHANGELOG.md
 
 # To remove tab warning
-ghc-options: "-lvlc -w -Woverlapping-patterns -Wwarnings-deprecations -Wdeprecations -Wdeprecated-flags -Wunrecognised-pragmas -Wredundant-constraints -Wduplicate-exports -Woverflowed-literals -Wempty-enumerations -Wmissing-fields -Wmissing-methods -Wwrong-do-bind -Wunsupported-calling-conventions -Wdodgy-foreign-imports -Winline-rule-shadowing -Wunsupported-llvm-version -Wunrecognised-warning-flags -Winaccessible-code -Wstar-is-type -Wstar-binder"
+ghc-options: "-w -Woverlapping-patterns -Wwarnings-deprecations -Wdeprecations -Wdeprecated-flags -Wunrecognised-pragmas -Wredundant-constraints -Wduplicate-exports -Woverflowed-literals -Wempty-enumerations -Wmissing-fields -Wmissing-methods -Wwrong-do-bind -Wunsupported-calling-conventions -Wdodgy-foreign-imports -Winline-rule-shadowing -Wunsupported-llvm-version -Wunrecognised-warning-flags -Winaccessible-code -Wstar-is-type -Wstar-binder"
 
 dependencies:
   - base >=4.12 && <5
