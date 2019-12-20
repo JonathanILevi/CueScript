@@ -1,17 +1,17 @@
-{ nixpkgs ? import <nixpkgs> {}, compiler ? "default", doBenchmark ? false }:
+{ nixpkgs ? import <upkg> {}, compiler ? "default", doBenchmark ? false }:
 
 let
 
   inherit (nixpkgs) pkgs;
 
-  f = { mkDerivation, base, containers, hpack, stdenv, vlc, cabal-install }:
+  f = { mkDerivation, base, containers, filepath, directory, hpack, stdenv, vlc, cabal-install }:
       mkDerivation {
         pname = "CueScript";
         version = "0.1.0";
         src = ./.;
         isLibrary = false;
         isExecutable = true;
-        libraryHaskellDepends = [ base containers ];
+        libraryHaskellDepends = [ base containers filepath directory ];
         librarySystemDepends = [ vlc ];
         libraryToolDepends = [ hpack cabal-install ];
         executableHaskellDepends = [ base containers ];

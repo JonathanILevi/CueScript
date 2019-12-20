@@ -21,6 +21,8 @@ internal-libraries:
     dependencies:
       - containers
       - mtl
+      - filepath
+      - directory
   scriptPrelude:
     source-dirs: src/scriptPrelude
     exposed-modules:

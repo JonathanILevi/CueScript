@@ -29,6 +29,7 @@ play inst (String file) = do
 	P.putStrLn ("Playing " P.++ file)
 	VLCBackend.playFromPath inst file
 	return Undefined
+
 print :: Value -> P.IO Value
 print Undefined = P.putStrLn "" >> return Undefined
 print (log) = do

@@ -9,13 +9,11 @@ import Control.Monad.State
 import Control.Monad.Reader
 
 main = do
-	prelude <- createScriptPrelude
-	executeBreakpoint $ runReader (start script) (prelude)
-	>>= maybe (pure Nothing) executeBreakpoint
-
-
-executeBreakpoint (Breakpoint (Just (action, next))) = do
-	rd <- runAction action
-	return $ Just (next rd)
-executeBreakpoint (Breakpoint Nothing) = print "done" >> pure Nothing
+	(prelude, runAction) <- createScriptPrelude
+	let	executeBreakpoint (Breakpoint (Just (action, next))) = do
+			rd <- runAction action
+			return $ Just (next rd)
+		executeBreakpoint (Breakpoint Nothing) = print "done" >> pure Nothing
+	
+	(executeBreakpoint $ runReader (start script) (prelude)) >>= maybe (pure Nothing) executeBreakpoint >>= maybe (pure Nothing) executeBreakpoint >>= maybe (pure Nothing) executeBreakpoint >>= maybe (pure Nothing) executeBreakpoint >>= maybe (pure Nothing) executeBreakpoint >>= maybe (pure Nothing) executeBreakpoint >>= maybe (pure Nothing) executeBreakpoint >>= maybe (pure Nothing) executeBreakpoint >>= maybe (pure Nothing) executeBreakpoint >>= maybe (pure Nothing) executeBreakpoint >>= maybe (pure Nothing) executeBreakpoint >>= maybe (pure Nothing) executeBreakpoint
 
